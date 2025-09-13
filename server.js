@@ -40,5 +40,9 @@ app.get("/api/profile", verifyToken, (req, res) => {
   res.json({ message: "Welcome!", uid: req.user.uid, email: req.user.email });
 });
 
+// 📧 Email routes (signup/login notifications)
+const mailRoutes = require("./routes/mailRoutes");
+app.use("/api/email", mailRoutes);
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
