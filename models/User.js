@@ -31,6 +31,36 @@ const userSchema = new mongoose.Schema(
       minlength: 6,
       select: false, // password won't be returned by default in queries
     },
+    role: {
+      type: String,
+      enum: [
+        "villager",
+        "farmer",
+        "government official",
+        "buyer",
+        "admin",
+        "staff",
+        "adviser",
+        "investor",
+        "other"
+      ],
+      default: "villager",
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "other", "prefer not to say"],
+      default: "prefer not to say",
+    },
+    address: {
+      street: { type: String, trim: true },
+      city: { type: String, trim: true },
+      state: { type: String, trim: true },
+      postalCode: {
+        type: String,
+        match: [/^\d{6}$/, "Please enter a valid 6-digit postal code"],
+      },
+      country: { type: String, trim: true, default: "India" },
+    },
   },
   { timestamps: true }
 );
@@ -38,7 +68,7 @@ const userSchema = new mongoose.Schema(
 // Hash password before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  
+
   try {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
