@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const { generateToken, generateRefreshToken } = require('../middleware/auth');
 
 // @route   POST /api/auth/signup
 // @desc    Register a new user
@@ -49,10 +48,6 @@ router.post('/signup', async (req, res) => {
 
     await user.save();
 
-    // Generate JWT token
-    const token = generateToken(user._id);
-    const refreshToken = generateRefreshToken(user._id);
-
     // Return user data without password
     const userResponse = {
       id: user._id,
@@ -66,9 +61,7 @@ router.post('/signup', async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
-      user: userResponse,
-      token,
-      refreshToken
+      user: userResponse
     });
 
   } catch (error) {
@@ -135,10 +128,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Generate JWT token
-    const token = generateToken(user._id);
-    const refreshToken = generateRefreshToken(user._id);
-
     // Return user data without password
     const userResponse = {
       id: user._id,
@@ -152,9 +141,7 @@ router.post('/login', async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Login successful',
-      user: userResponse,
-      token,
-      refreshToken
+      user: userResponse
     });
 
   } catch (error) {
