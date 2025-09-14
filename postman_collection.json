@@ -1,0 +1,432 @@
+{
+  "info": {
+    "name": "GramSeva API",
+    "description": "Complete API collection for GramSeva platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "User Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"phoneNo\": \"9876543210\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"investor\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/signup",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "signup"]
+            }
+          }
+        },
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Business Management",
+      "item": [
+        {
+          "name": "Get All Businesses",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/business?page=1&limit=10&sector=agriculture&status=open",
+              "host": ["{{base_url}}"],
+              "path": ["business"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sector",
+                  "value": "agriculture"
+                },
+                {
+                  "key": "status",
+                  "value": "open"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Business",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Green Farm Solutions\",\n  \"description\": \"Sustainable farming solutions for modern agriculture\",\n  \"sector\": \"agriculture\",\n  \"fundingGoal\": 500000,\n  \"location\": {\n    \"type\": \"Point\",\n    \"coordinates\": [73.8567, 18.5204],\n    \"address\": {\n      \"street\": \"Farm Road 1\",\n      \"city\": \"Pune\",\n      \"state\": \"Maharashtra\",\n      \"postalCode\": \"411001\",\n      \"country\": \"India\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/business/create",
+              "host": ["{{base_url}}"],
+              "path": ["business", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get Business by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/business/:businessId",
+              "host": ["{{base_url}}"],
+              "path": ["business", ":businessId"],
+              "variable": [
+                {
+                  "key": "businessId",
+                  "value": "BUSINESS_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Investment System",
+      "item": [
+        {
+          "name": "Create Investment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"businessId\": \"BUSINESS_ID_HERE\",\n  \"amount\": 50000,\n  \"paymentMethod\": \"bank_transfer\",\n  \"paymentReference\": \"BANK_REF_123456\",\n  \"terms\": {\n    \"expectedReturn\": 12,\n    \"investmentPeriod\": 24,\n    \"riskLevel\": \"medium\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/investments/create",
+              "host": ["{{base_url}}"],
+              "path": ["investments", "create"]
+            }
+          }
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"investmentId\": \"INVESTMENT_ID_HERE\",\n  \"paymentMethod\": \"bank_transfer\",\n  \"paymentReference\": \"BANK_REF_123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/investments/verify",
+              "host": ["{{base_url}}"],
+              "path": ["investments", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Get User Investments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/investments/my?page=1&limit=10&status=completed",
+              "host": ["{{base_url}}"],
+              "path": ["investments", "my"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "completed"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Performance Tracking",
+      "item": [
+        {
+          "name": "Submit Performance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"businessId\": \"BUSINESS_ID_HERE\",\n  \"year\": 2024,\n  \"quarter\": 1,\n  \"startDate\": \"2024-01-01\",\n  \"endDate\": \"2024-03-31\",\n  \"revenue\": 150000,\n  \"expenses\": 100000,\n  \"breakdown\": {\n    \"operatingRevenue\": 140000,\n    \"nonOperatingRevenue\": 10000,\n    \"operatingExpenses\": 80000,\n    \"nonOperatingExpenses\": 15000,\n    \"taxes\": 5000\n  },\n  \"notes\": \"Strong Q1 performance with good revenue growth\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/performance/submit",
+              "host": ["{{base_url}}"],
+              "path": ["performance", "submit"]
+            }
+          }
+        },
+        {
+          "name": "Get Business Performance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/performance/business/:businessId?page=1&limit=10&year=2024",
+              "host": ["{{base_url}}"],
+              "path": ["performance", "business", ":businessId"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "year",
+                  "value": "2024"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "businessId",
+                  "value": "BUSINESS_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Performance",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/performance/approve/:performanceId",
+              "host": ["{{base_url}}"],
+              "path": ["performance", "approve", ":performanceId"],
+              "variable": [
+                {
+                  "key": "performanceId",
+                  "value": "PERFORMANCE_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Distribution System",
+      "item": [
+        {
+          "name": "Get Investor Distributions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/distributions/my?page=1&limit=10&status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["distributions", "my"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Distribution",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approvalNotes\": \"Distribution approved after verification\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/distributions/approve/:distributionId",
+              "host": ["{{base_url}}"],
+              "path": ["distributions", "approve", ":distributionId"],
+              "variable": [
+                {
+                  "key": "distributionId",
+                  "value": "DISTRIBUTION_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark Distribution as Paid",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentMethod\": \"bank_transfer\",\n  \"transactionId\": \"TXN_123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/distributions/pay/:distributionId",
+              "host": ["{{base_url}}"],
+              "path": ["distributions", "pay", ":distributionId"],
+              "variable": [
+                {
+                  "key": "distributionId",
+                  "value": "DISTRIBUTION_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

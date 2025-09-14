@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
@@ -85,12 +86,20 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const alertRoutes = require('./routes/alertRoutes');
 const newsRoutes = require('./routes/newsRoutes');
+const businessRoutes = require('./routes/businessRoutes');
+const investmentRoutes = require('./routes/investmentRoutes');
+const performanceRoutes = require('./routes/performanceRoutes');
+const distributionRoutes = require('./routes/distributionRoutes');
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/business', businessRoutes);
+app.use('/api/investments', investmentRoutes);
+app.use('/api/performance', performanceRoutes);
+app.use('/api/distributions', distributionRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
