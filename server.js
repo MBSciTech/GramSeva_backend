@@ -9,16 +9,35 @@ const PORT = 8000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS middleware (add this if you need to handle cross-origin requests)
+// CORS middleware
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    // Allow requests from localhost (development) and your deployed frontend
+    const allowedOrigins = [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'https://gramseva-frontend.onrender.com', // Add your deployed frontend URL here
+        'https://gramseva.vercel.app', // Add if you deploy to Vercel
+        'https://gramseva.netlify.app' // Add if you deploy to Netlify
+    ];
+    
+    const origin = req.headers.origin;
+    
+    // Allow requests from allowed origins or if no origin (like Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin || '*');
+    }
+    
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    // Handle preflight requests
     if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-    } else {
-        next();
+        res.status(200).end();
+        return;
     }
+    
+    next();
 });
 
 // Database connection
