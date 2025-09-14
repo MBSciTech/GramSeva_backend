@@ -641,4 +641,65 @@ router.put('/:id/status', authenticateUser, requireAdminOrStaff, async (req, res
   }
 });
 
+// @route   GET /api/news/all
+// @desc    Fetch all published news for users
+// @access  Public
+router.get('/all', async (req, res) => {
+  try {
+    const { page = 1, limit = 20, sortBy = 'publishedAt', sortOrder = 'desc' } = req.query;
+
+    // Build filter: only published news
+    const filter = { status: 'published' };
+
+    // Build sort object
+    const sort = {};
+    sort[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+    // Fetch news with pagination
+    const news = await News.find(filter)
+      .populate('createdBy', 'username email role')
+      .sort(sort)
+      .limit(parseInt(limit))
+      .skip((parseInt(page) - 1) * parseInt(limit));
+
+    const total = await News.countDocuments(filter);
+
+    res.status(200).json({
+      success: true,
+      totalNews: total,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / limit),
+        hasNext: page < Math.ceil(total / limit),
+        hasPrev: page > 1
+      },
+      news: news.map(article => ({
+        id: article._id,
+        title: article.title,
+        slug: article.slug,
+        summary: article.summary,
+        source: article.source,
+        author: article.author,
+        publishedAt: article.publishedAt,
+        category: article.category,
+        tags: article.tags,
+        language: article.language,
+        imageUrl: article.imageUrl,
+        location: article.location,
+        isFeatured: article.isFeatured,
+        views: article.views,
+        createdBy: article.createdBy,
+        createdAt: article.createdAt
+      }))
+    });
+  } catch (error) {
+    console.error('Fetch all user news error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+});
+
+
 module.exports = router;
