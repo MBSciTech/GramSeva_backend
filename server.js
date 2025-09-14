@@ -83,10 +83,12 @@ process.on('SIGINT', async () => {
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const alertRoutes = require('./routes/alertRoutes');
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/alerts', alertRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
