@@ -37,9 +37,9 @@ const newsSchema = new mongoose.Schema(
       default: Date.now,
     },
     category: {
-      type: String,
-      enum: ["gov_scheme", "weather", "news", "market", "sports", "health", "education", "general"],
+      type: String, // ✅ removed enum for flexibility
       default: "news",
+      trim: true,
     },
     tags: [{ type: String, trim: true }],
     language: {
@@ -112,14 +112,15 @@ newsSchema.index({
 });
 
 // Geo index for location
-newsSchema.index({ "location": "2dsphere" });
+newsSchema.index({ location: "2dsphere" });
 
 // Pre-save slug generation (if title changed)
 newsSchema.pre("save", function (next) {
   if (this.isModified("title") || !this.slug) {
     const base = slugify(this.title || "", { lower: true, strict: true }).slice(0, 160);
-    // append short id to keep slugs unique-ish — adjust strategy as needed
-    this.slug = `${base}-${this._id.toString().slice(-6)}`;
+    // Use timestamp if _id is not available yet
+    const suffix = this._id ? this._id.toString().slice(-6) : Date.now().toString().slice(-6);
+    this.slug = `${base}-${suffix}`;
   }
   next();
 });
