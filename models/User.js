@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema(
       ],
       default: "villager",
     },
+    isBusi: {type: boolean},
     gender: {
       type: String,
       enum: ["male", "female", "other", "prefer not to say"],
