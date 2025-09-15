@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 });
 
 // Database connection
-const MONGODB_URI = 'mongodb+srv://maharshibhattisro_db_user:UpkuqZEye20QSVzv@gramseva.wnrvl4e.mongodb.net/?retryWrites=true&w=majority&appName=Gramseva';
+const MONGODB_URI = 'mongodb+srv://maharshibhattisro_db_user:UpkuqZEye20QSVzv@gramseva.wnrvl4e.mongodb.net/test?retryWrites=true&w=majority&appName=Gramseva';
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
