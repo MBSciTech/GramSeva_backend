@@ -90,6 +90,7 @@ const businessRoutes = require('./routes/businessRoutes');
 const investmentRoutes = require('./routes/investmentRoutes');
 const performanceRoutes = require('./routes/performanceRoutes');
 const distributionRoutes = require('./routes/distributionRoutes');
+const commodityRoutes = require('./routes/commodityRoutes');
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -100,6 +101,7 @@ app.use('/api/business', businessRoutes);
 app.use('/api/investments', investmentRoutes);
 app.use('/api/performance', performanceRoutes);
 app.use('/api/distributions', distributionRoutes);
+app.use('/api/commodity', commodityRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
